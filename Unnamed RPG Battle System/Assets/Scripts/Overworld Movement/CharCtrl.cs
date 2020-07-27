@@ -32,16 +32,20 @@ public class CharCtrl : MonoBehaviour
 
     private void DoMove()
     {
-        if(Input.GetKey(KeyCode.W))
+        if(Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             float speed = moveSpeed;
 
-            if(Input.GetKey(KeyCode.LeftShift))
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                speed *= 2.0f;
+                speed *= 1.8f;
             }
 
-            Vector3 newPos = transform.position + (transform.rotation * Vector3.forward * Time.deltaTime * speed);
+            Vector3 newPos = transform.position + (transform.rotation * new Vector3(horizontal, 0.0f, vertical) * Time.deltaTime * speed);
+
             NavMeshHit hit;
 
             bool isValidMove = NavMesh.SamplePosition(newPos, out hit, 1.0f, NavMesh.AllAreas);

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39eb121f4f24f84489629997064940c0, type: 3}
+  m_Name: SampleBaseGrowth
+  m_EditorClassIdentifier: 
+  baseExpGoal: 100
+  baseExpGoalGrowth: 1.12
+  maxExpGoal: 50000
+  baseHP: 120
+  growthHP: 4.2
+  baseATK: 5
+  growthATK: 2.8
+  baseDEF: 4
+  growthDEF: 1.9
+  baseSPD: 12
+  growthSPD: 3.1
+  baseMP: 54
+  growthMP: 1
+  baseMAG: 4
+  growthMAG: 3.2
+  baseRES: 4
+  growthRES: 2.1
+  basePRC: 10
+  growthPRC: 2.6
+  baseBRV: 4
+  growthBRV: 3.5
+  baseCHA: 1
+  growthCHA: 1.15
+  baseCOM: 2
+  growthCOM: 1.8
+  baseSKL: 3
+  growthSKL: 3.3
