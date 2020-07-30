@@ -1249,6 +1249,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394600414}
   m_CullTransparentMesh: 0
+--- !u!1 &1578080130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1578080132}
+  - component: {fileID: 1578080131}
+  m_Layer: 0
+  m_Name: FPS Limiter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1578080131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578080130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d7b4db079329b4d8f9fb222f00ab18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1578080132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578080130}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1663722667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,6 +1419,30 @@ MonoBehaviour:
   _charisma: 0
   _compassion: 0
   _skill: 0
+  _bonusHP: 0
+  _bonusATK: 0
+  _bonusDEF: 0
+  _bonusSPD: 0
+  _bonusMP: 0
+  _bonusMAG: 0
+  _bonusRES: 0
+  _bonusPRC: 0
+  _bonusBRV: 0
+  _bonusCHA: 0
+  _bonusCOM: 0
+  _bonusSKL: 0
+  _unitPosition: -1
+  _buffModATK: 0
+  _buffModDEF: 0
+  _buffModMAG: 0
+  _buffModRES: 0
+  _buffModSPD: 0
+  _buffModPRC: 0
+  weakness: 
+  resists: 
+  nullifies: 
+  absorbs: 
+  reflects: 
   skillsLearnedOnLevelUp:
   - levelLearned: 1
     skillName: Pyre

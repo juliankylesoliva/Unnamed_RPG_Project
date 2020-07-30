@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class CharacterInfo : MonoBehaviour
 {
+    /* BASE STATS AND GROWTHS */
     [Header("Base Stats and Growth Ratio Data")]
     public BasesAndGrowths baseGrowths;
     // Bonus stats here
 
+    /* BASIC CHARACTER INFO */
     [Header("Basic Character Info")]
     [SerializeField]
     private string _name;
@@ -137,6 +139,7 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    /* PHYSICAL STATS */
     [Header("Physical Stats")]
     [SerializeField]
     private int _maxHP;
@@ -147,7 +150,7 @@ public class CharacterInfo : MonoBehaviour
             return _maxHP;
         }
 
-        set
+        private set
         {
             if(value >= 1 && value <= 999)
             {
@@ -173,7 +176,7 @@ public class CharacterInfo : MonoBehaviour
             return _currentHP;
         }
 
-        set
+        private set
         {
             if(value >= 0 && value <= this._maxHP)
             {
@@ -190,6 +193,49 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    public bool dealDamage(int dmg)
+    {
+        if (dmg > 0)
+        {
+            CurrentHP -= dmg;
+        }
+
+        return CurrentHP == 0;
+    }
+
+    public void healDamage(int heal)
+    {
+        if(heal > 0)
+        {
+            CurrentHP += heal;
+        }
+    }
+
+    public int getHPPercent(int costPercent)
+    {
+        return (int)(_maxHP * (costPercent / 100.0f));
+    }
+
+    public bool checkHPCost(int costPercent)
+    {
+        if(getHPPercent(costPercent) > _currentHP - 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void spendHP(int costPercent)
+    {
+        _currentHP -= getHPPercent(costPercent);
+
+        if(_currentHP < 1)
+        {
+            _currentHP = 1;
+        }
+    }
+
     [SerializeField]
     private int _attack;
     public int Attack
@@ -199,7 +245,7 @@ public class CharacterInfo : MonoBehaviour
             return _attack;
         }
 
-        set
+        private set
         {
             if(value >= 1 && value <= 999)
             {
@@ -225,7 +271,7 @@ public class CharacterInfo : MonoBehaviour
             return _defense;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -251,7 +297,7 @@ public class CharacterInfo : MonoBehaviour
             return _speed;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -268,6 +314,7 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    /* MENTAL STATS */
     [Header("Mental Stats")]
     [SerializeField]
     private int _maxMP;
@@ -278,7 +325,7 @@ public class CharacterInfo : MonoBehaviour
             return _maxMP;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -304,7 +351,7 @@ public class CharacterInfo : MonoBehaviour
             return _currentMP;
         }
 
-        set
+        private set
         {
             if (value >= 0 && value <= this._maxMP)
             {
@@ -321,6 +368,32 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    public bool checkMPCost(int cost)
+    {
+        if(cost > _currentMP)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void spendMP(int cost)
+    {
+        if(cost > 0)
+        {
+            CurrentMP -= cost;
+        }
+    }
+
+    public void restoreMP(int heal)
+    {
+        if(heal > 0)
+        {
+            CurrentMP += heal;
+        }
+    }
+
     [SerializeField]
     private int _magic;
     public int Magic
@@ -330,7 +403,7 @@ public class CharacterInfo : MonoBehaviour
             return _magic;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -356,7 +429,7 @@ public class CharacterInfo : MonoBehaviour
             return _resistance;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -382,7 +455,7 @@ public class CharacterInfo : MonoBehaviour
             return _precision;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -399,6 +472,7 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    /* LIFESTYLE STATS */
     [Header("Lifestyle Stats")]
     [SerializeField]
     private int _bravery;
@@ -409,7 +483,7 @@ public class CharacterInfo : MonoBehaviour
             return _bravery;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -435,7 +509,7 @@ public class CharacterInfo : MonoBehaviour
             return _charisma;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -461,7 +535,7 @@ public class CharacterInfo : MonoBehaviour
             return _compassion;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -487,7 +561,7 @@ public class CharacterInfo : MonoBehaviour
             return _skill;
         }
 
-        set
+        private set
         {
             if (value >= 1 && value <= 999)
             {
@@ -504,20 +578,597 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
+    /* BONUS STATS */
+    [Header("Bonus Stats")]
+
+    [SerializeField]
+    private int _bonusHP;
+    public int BonusHP
+    {
+        get
+        {
+            return _bonusHP;
+        }
+
+        set
+        {
+            if(value >= 0 && value <= 500)
+            {
+                _bonusHP = value;
+            }
+            else if(value < 0)
+            {
+                _bonusHP = 0;
+            }
+            else
+            {
+                _bonusHP = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusATK;
+    public int BonusATK
+    {
+        get
+        {
+            return _bonusATK;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusATK = value;
+            }
+            else if (value < 0)
+            {
+                _bonusATK = 0;
+            }
+            else
+            {
+                _bonusATK = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusDEF;
+    public int BonusDEF
+    {
+        get
+        {
+            return _bonusDEF;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusDEF = value;
+            }
+            else if (value < 0)
+            {
+                _bonusDEF = 0;
+            }
+            else
+            {
+                _bonusDEF = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusSPD;
+    public int BonusSPD
+    {
+        get
+        {
+            return _bonusSPD;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusSPD = value;
+            }
+            else if (value < 0)
+            {
+                _bonusSPD = 0;
+            }
+            else
+            {
+                _bonusSPD = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusMP;
+    public int BonusMP
+    {
+        get
+        {
+            return _bonusMP;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusMP = value;
+            }
+            else if (value < 0)
+            {
+                _bonusMP = 0;
+            }
+            else
+            {
+                _bonusMP = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusMAG;
+    public int BonusMAG
+    {
+        get
+        {
+            return _bonusMAG;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusMAG = value;
+            }
+            else if (value < 0)
+            {
+                _bonusMAG = 0;
+            }
+            else
+            {
+                _bonusMAG = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusRES;
+    public int BonusRES
+    {
+        get
+        {
+            return _bonusRES;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusRES = value;
+            }
+            else if (value < 0)
+            {
+                _bonusRES = 0;
+            }
+            else
+            {
+                _bonusRES = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusPRC;
+    public int BonusPRC
+    {
+        get
+        {
+            return _bonusPRC;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusPRC = value;
+            }
+            else if (value < 0)
+            {
+                _bonusPRC = 0;
+            }
+            else
+            {
+                _bonusPRC = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusBRV;
+    public int BonusBRV
+    {
+        get
+        {
+            return _bonusBRV;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusBRV = value;
+            }
+            else if (value < 0)
+            {
+                _bonusBRV = 0;
+            }
+            else
+            {
+                _bonusBRV = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusCHA;
+    public int BonusCHA
+    {
+        get
+        {
+            return _bonusCHA;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusCHA = value;
+            }
+            else if (value < 0)
+            {
+                _bonusCHA = 0;
+            }
+            else
+            {
+                _bonusCHA = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusCOM;
+    public int BonusCOM
+    {
+        get
+        {
+            return _bonusCOM;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusCOM = value;
+            }
+            else if (value < 0)
+            {
+                _bonusCOM = 0;
+            }
+            else
+            {
+                _bonusCOM = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
+    [SerializeField]
+    private int _bonusSKL;
+    public int BonusSKL
+    {
+        get
+        {
+            return _bonusSKL;
+        }
+
+        set
+        {
+            if (value >= 0 && value <= 500)
+            {
+                _bonusSKL = value;
+            }
+            else if (value < 0)
+            {
+                _bonusSKL = 0;
+            }
+            else
+            {
+                _bonusSKL = 500;
+            }
+
+            refreshStats();
+        }
+    }
+
     /* BATTLE DATA */
-    // public int unitPosition = -1; // Players: 0, 1, 2, 3. Enemies: 4, 5, 6, 7, 8.
+    [Header("Battle Data")]
 
-    // public List<StatusCondition> = new List<StatusCondition>();
-    // public void giveStatusCondition(StatusCondition stat) {} // If the status doesn't already exist, put it in the list and start it. Otherwise, extend the current instance.
-    // public void removeStatusCondition(string statusName) {} // If the list contains an instance of the same name, then remove it from the list.
-    // public void countdownStatuses() {} // When it is this unit's turn, reduce all status timers by one. If any timer hits zero, then that status gets removed.
-    // public void activateStatuses() {} // After a unit's turn (when applicable) make the attached status do it's specified action.
+    [SerializeField]
+    private int _unitPosition = -1; // Players: 0, 1, 2, 3. Enemies: 4, 5, 6, 7, 8.
+    public int UnitPosition
+    {
+        get
+        {
+            return _unitPosition;
+        }
 
-    // public List<ElementType> weakness = new List<ElementType>();
-    // public List<ElementType> resists = new List<ElementType>();
-    // public List<ElementType> nullifies = new List<ElementType>();
-    // public List<ElementType> absorbs = new List<ElementType>();
-    // public List<ElementType> reflects = new List<ElementType>();
+        set
+        {
+            if(value >= 0 && value <= 8)
+            {
+                _unitPosition = value;
+            }
+        }
+    }
+
+    public bool IsGuarding { get; set; }
+
+    public bool DidHitWeakness { get; set; }
+
+    [SerializeField]
+    private int _buffModATK = 0;
+    public int BuffModATK
+    {
+        get
+        {
+            return _buffModATK;
+        }
+
+        set
+        {
+            if(value >= -1 && value <= 1)
+            {
+                _buffModATK = value;
+            }
+            else if(value < -1)
+            {
+                _buffModATK = -1;
+            }
+            else
+            {
+                _buffModATK = 1;
+            }
+        }
+    }
+
+    [SerializeField]
+    private int _buffModDEF = 0;
+    public int BuffModDEF
+    {
+        get
+        {
+            return _buffModDEF;
+        }
+
+        set
+        {
+            if (value >= -1 && value <= 1)
+            {
+                _buffModDEF = value;
+            }
+            else if (value < -1)
+            {
+                _buffModDEF = -1;
+            }
+            else
+            {
+                _buffModDEF = 1;
+            }
+        }
+    }
+
+    [SerializeField]
+    private int _buffModMAG = 0;
+    public int BuffModMAG
+    {
+        get
+        {
+            return _buffModMAG;
+        }
+
+        set
+        {
+            if (value >= -1 && value <= 1)
+            {
+                _buffModMAG = value;
+            }
+            else if (value < -1)
+            {
+                _buffModMAG = -1;
+            }
+            else
+            {
+                _buffModMAG = 1;
+            }
+        }
+    }
+
+    [SerializeField]
+    private int _buffModRES = 0;
+    public int BuffModRES
+    {
+        get
+        {
+            return _buffModRES;
+        }
+
+        set
+        {
+            if (value >= -1 && value <= 1)
+            {
+                _buffModRES = value;
+            }
+            else if (value < -1)
+            {
+                _buffModRES = -1;
+            }
+            else
+            {
+                _buffModRES = 1;
+            }
+        }
+    }
+
+    [SerializeField]
+    private int _buffModSPD = 0;
+    public int BuffModSPD
+    {
+        get
+        {
+            return _buffModSPD;
+        }
+
+        set
+        {
+            if (value >= -1 && value <= 1)
+            {
+                _buffModSPD = value;
+            }
+            else if (value < -1)
+            {
+                _buffModSPD = -1;
+            }
+            else
+            {
+                _buffModSPD = 1;
+            }
+        }
+    }
+
+    [SerializeField]
+    private int _buffModPRC = 0;
+    public int BuffModPRC
+    {
+        get
+        {
+            return _buffModPRC;
+        }
+
+        set
+        {
+            if (value >= -1 && value <= 1)
+            {
+                _buffModPRC = value;
+            }
+            else if (value < -1)
+            {
+                _buffModPRC = -1;
+            }
+            else
+            {
+                _buffModPRC = 1;
+            }
+        }
+    }
+
+    public float getBuffModMultiplier(int stage)
+    {
+        switch(stage)
+        {
+            case 1:
+                return 1.20f;
+            case -1:
+                return 0.80f;
+            default:
+                return 1.00f;
+        }
+    }
+
+    private Dictionary<StatusCondition, int> currentStatuses;
+    public void initCurrentStatuses()
+    {
+        if(currentStatuses != null)
+        {
+            return;
+        }
+
+        currentStatuses = new Dictionary<StatusCondition, int>();
+    }
+
+    public void giveStatus(StatusCondition stat, int turns)
+    {
+        initCurrentStatuses();
+        currentStatuses.Add(stat, turns);
+    }
+
+    public void extendStatus(StatusCondition stat, int turns)
+    {
+        initCurrentStatuses();
+        if(currentStatuses.ContainsKey(stat))
+        {
+            currentStatuses[stat] += turns;
+        }
+    }
+
+    public void removeStatus(StatusCondition stat)
+    {
+        initCurrentStatuses();
+        if(currentStatuses.ContainsKey(stat))
+        {
+            currentStatuses.Remove(stat);
+        }
+    }
+    
+    public bool countdownStatus(StatusCondition stat)
+    {
+        initCurrentStatuses();
+        if(!currentStatuses.ContainsKey(stat))
+        {
+            return false;
+        }
+
+        currentStatuses[stat]--;
+
+        if(currentStatuses[stat] == 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public List<ElementType> weakness = new List<ElementType>();
+    public List<ElementType> resists = new List<ElementType>();
+    public List<ElementType> nullifies = new List<ElementType>();
+    public List<ElementType> absorbs = new List<ElementType>();
+    public List<ElementType> reflects = new List<ElementType>();
 
     /* SKILL SETS */
     [System.Serializable]
@@ -530,7 +1181,7 @@ public class CharacterInfo : MonoBehaviour
     [Header("Skill Sets")]
     public SkillsLearnedOnLevelUp[] skillsLearnedOnLevelUp; // Define within Editor
     
-    public List<KeyValuePair<int, string>> levelUpSkills;
+    public List<KeyValuePair<int, string>> levelUpSkills = null;
     public void initLevelUpSkills() // Populates the above list with the level and skill names provided in the Editor
     {
         if(levelUpSkills != null)
@@ -550,6 +1201,8 @@ public class CharacterInfo : MonoBehaviour
 
     public List<string> equippedSkills; // Skills that are currently equipped go here
 
+    public List<SkillScript> battleSkills; // List of skills to be populated and used by the battle system.
+
     /* FUNCTIONS */
     public void initCharacter()
     {
@@ -559,7 +1212,6 @@ public class CharacterInfo : MonoBehaviour
         initExpGoals();
         this.Level = 1;
         this.ExperiencePoints = 0;
-        
     }
 
     private void learnNewSkills()
@@ -583,28 +1235,28 @@ public class CharacterInfo : MonoBehaviour
     public void refreshStats()
     {
         int temp = _maxHP;
-        _calcStat(ref _maxHP, baseGrowths.baseHP, baseGrowths.growthHP);
+        _calcStat(ref _maxHP, baseGrowths.baseHP, baseGrowths.growthHP, _bonusHP);
         _currentHP += (_maxHP - temp);
-        _calcStat(ref _attack, baseGrowths.baseATK, baseGrowths.growthATK);
-        _calcStat(ref _defense, baseGrowths.baseDEF, baseGrowths.growthDEF);
-        _calcStat(ref _speed, baseGrowths.baseSPD, baseGrowths.growthSPD);
+        _calcStat(ref _attack, baseGrowths.baseATK, baseGrowths.growthATK, _bonusATK);
+        _calcStat(ref _defense, baseGrowths.baseDEF, baseGrowths.growthDEF, _bonusDEF);
+        _calcStat(ref _speed, baseGrowths.baseSPD, baseGrowths.growthSPD, _bonusSPD);
 
         temp = _maxMP;
-        _calcStat(ref _maxMP, baseGrowths.baseMP, baseGrowths.growthMP);
+        _calcStat(ref _maxMP, baseGrowths.baseMP, baseGrowths.growthMP, _bonusMP);
         _currentMP += (_maxMP - temp);
-        _calcStat(ref _magic, baseGrowths.baseMAG, baseGrowths.growthMAG);
-        _calcStat(ref _resistance, baseGrowths.baseRES, baseGrowths.growthRES);
-        _calcStat(ref _precision, baseGrowths.basePRC, baseGrowths.growthPRC);
+        _calcStat(ref _magic, baseGrowths.baseMAG, baseGrowths.growthMAG, _bonusMAG);
+        _calcStat(ref _resistance, baseGrowths.baseRES, baseGrowths.growthRES, _bonusRES);
+        _calcStat(ref _precision, baseGrowths.basePRC, baseGrowths.growthPRC, _bonusPRC);
 
-        _calcStat(ref _bravery, baseGrowths.baseBRV, baseGrowths.growthBRV);
-        _calcStat(ref _charisma, baseGrowths.baseCHA, baseGrowths.growthCHA);
-        _calcStat(ref _compassion, baseGrowths.baseCOM, baseGrowths.growthCOM);
-        _calcStat(ref _skill, baseGrowths.baseSKL, baseGrowths.growthSKL);
+        _calcStat(ref _bravery, baseGrowths.baseBRV, baseGrowths.growthBRV, _bonusBRV);
+        _calcStat(ref _charisma, baseGrowths.baseCHA, baseGrowths.growthCHA, _bonusCHA);
+        _calcStat(ref _compassion, baseGrowths.baseCOM, baseGrowths.growthCOM, _bonusCOM);
+        _calcStat(ref _skill, baseGrowths.baseSKL, baseGrowths.growthSKL, _bonusSKL);
     }
 
-    private void _calcStat(ref int stat, int baseStat, float growth)
+    private void _calcStat(ref int stat, int baseStat, float growth, int bonus)
     {
         stat = baseStat + (int)(growth * (_level - 1));
-        // Add any increases from gear or other bonuses?
+        stat += (int)((bonus / 5) * ((_level - 1) / 99.0f));
     }
 }
