@@ -4,57 +4,57 @@ using UnityEngine;
 
 public class Poison : StatusScript
 {
-    public override IEnumerator InitializeStatus(CharData chr, int numTurns)
+    public override IEnumerator InitializeStatus(CharacterInfo chr, int numTurns)
     {
-        if (!chr.statuses.ContainsKey(statusName))
+        if (!chr.containsStatus(statusName))
         {
-            chr.statuses.Add(statusName, numTurns);
-            system.infoText.SetText($"{chr.charName} got poisoned!");
+            chr.giveStatus(statusName, numTurns);
+            system.infoText.SetText($"{chr.Name} got poisoned!");
         }
         else
         {
-            system.infoText.SetText($"{chr.charName} is already poisoned!");
+            system.infoText.SetText($"{chr.Name} is already poisoned!");
         }
         yield return new WaitForSeconds(0.75f);
     }
 
-    public override IEnumerator DoStatus(CharData chr)
+    public override IEnumerator DoStatus(CharacterInfo chr)
     {
-        int poisonDmg = (int)(chr.maxHP * 0.20);
+        int poisonDmg = (int)(chr.MaxHP * 0.20);
 
         //system.infoText.SetText($"{chr.charName}'s burn dealt {burnDmg} damage!");
-        bool isKnockedOut = chr.DoDamage(poisonDmg);
-        if (chr.currentBattlePosition < 4)
+        bool isKnockedOut = chr.dealDamage(poisonDmg);
+        if (chr.UnitPosition < 4)
         {
-            system.playerHealthbarRefs[chr.currentBattlePosition].setHeader("POISONED!");
-            system.playerHealthbarRefs[chr.currentBattlePosition].setDamageNum(poisonDmg);
-            StartCoroutine(system.statusPanelRefs[chr.currentBattlePosition].drainHPBar(chr));
-            StartCoroutine(system.playerHealthbarRefs[chr.currentBattlePosition].drainHealthbar(chr));
+            system.playerHealthbarRefs[chr.UnitPosition].setHeader("POISONED!");
+            system.playerHealthbarRefs[chr.UnitPosition].setDamageNum(poisonDmg);
+            StartCoroutine(system.statusPanelRefs[chr.UnitPosition].drainHPBar(chr));
+            StartCoroutine(system.playerHealthbarRefs[chr.UnitPosition].drainHealthbar(chr));
         }
         else
         {
-            system.healthbarRefs[chr.currentBattlePosition - 4].setHeader("POISONED!");
-            system.healthbarRefs[chr.currentBattlePosition - 4].setDamageNum(poisonDmg);
-            StartCoroutine(system.healthbarRefs[chr.currentBattlePosition - 4].flashHUD(chr));
+            system.healthbarRefs[chr.UnitPosition - 4].setHeader("POISONED!");
+            system.healthbarRefs[chr.UnitPosition - 4].setDamageNum(poisonDmg);
+            StartCoroutine(system.healthbarRefs[chr.UnitPosition - 4].flashHUD(chr));
         }
 
         if (isKnockedOut)
         {
-            system.infoText.SetText($"{chr.charName} succumbed to the poison!");
+            system.infoText.SetText($"{chr.Name} succumbed to the poison!");
 
-            if (chr.currentBattlePosition > 3)
+            if (chr.UnitPosition > 3)
             {
-                GameObject.Destroy(system.enemyStations[chr.currentBattlePosition - 4].transform.GetChild(0).gameObject);
+                GameObject.Destroy(system.enemyStations[chr.UnitPosition - 4].transform.GetChild(0).gameObject);
             }
         }
 
         yield return new WaitForSeconds(0.75f);
     }
 
-    public override IEnumerator StatusCleared(CharData chr)
+    public override IEnumerator StatusCleared(CharacterInfo chr)
     {
-        chr.statuses.Remove(statusName);
-        system.infoText.SetText($"{chr.charName} is no longer poisoned!");
+        chr.removeStatus(statusName);
+        system.infoText.SetText($"{chr.Name} is no longer poisoned!");
         yield return new WaitForSeconds(0.75f);
     }
 }

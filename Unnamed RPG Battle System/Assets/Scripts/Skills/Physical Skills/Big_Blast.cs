@@ -11,11 +11,11 @@ public class Big_Blast : SkillScript
         system.targetMode = TargetMode.AnyEnemy;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} used Big Blast!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} used Big Blast!"));
 
         yield return StartCoroutine(DoChangeCamToPlayerTargets(dst));
 
@@ -30,7 +30,7 @@ public class Big_Blast : SkillScript
 
             yield return StartCoroutine(DoDealDamage(dst, dmg));
 
-            CharData dataRef = GetAdjacentTarget(dst, -1);
+            CharacterInfo dataRef = GetAdjacentTarget(dst, -1);
             if(dataRef != null)
             {
                 DoHealthBarText(dataRef, "BLAST!", dmg / 3);
@@ -50,7 +50,7 @@ public class Big_Blast : SkillScript
         }
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

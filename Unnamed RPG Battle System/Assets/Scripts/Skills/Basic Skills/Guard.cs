@@ -10,15 +10,15 @@ public class Guard : SkillScript
         system.menuState = MenuState.Guard;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.infoText.SetText($"{src.charName} guards.");
-        src.isGuarding = true;
+        system.infoText.SetText($"{src.Name} guards.");
+        src.IsGuarding = true;
 
         yield return new WaitForSeconds(1.0f);
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

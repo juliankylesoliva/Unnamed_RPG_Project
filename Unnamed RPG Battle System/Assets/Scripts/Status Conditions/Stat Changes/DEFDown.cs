@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class DEFDown : StatusScript
 {
-    public override IEnumerator InitializeStatus(CharData chr, int numTurns)
+    public override IEnumerator InitializeStatus(CharacterInfo chr, int numTurns)
     {
-        if (chr.statuses.ContainsKey(StatusCondition.DEF_Up))
+        if (chr.containsStatus(StatusCondition.DEF_Up))
         {
             StatusScript statTemp = system.statusList.LookForStatus(StatusCondition.DEF_Up);
             yield return StartCoroutine(statTemp.StatusCleared(chr));
         }
-        else if (chr.statuses.ContainsKey(statusName))
+        else if (chr.containsStatus(statusName))
         {
-            chr.statuses[statusName] += numTurns;
+            chr.extendStatus(statusName, numTurns);
             system.infoText.SetText("Defense decrease extended!");
             yield return new WaitForSeconds(0.75f);
         }
         else
         {
-            chr.statuses.Add(statusName, numTurns);
-            chr.DEFMod = 0.75f;
+            chr.giveStatus(statusName, numTurns);
+            chr.BuffModDEF = -1;
             system.infoText.SetText("Defense down!");
             yield return new WaitForSeconds(0.75f);
         }
     }
 
-    public override IEnumerator DoStatus(CharData chr)
+    public override IEnumerator DoStatus(CharacterInfo chr)
     {
         yield return new WaitForSeconds(0.0f);
     }
 
-    public override IEnumerator StatusCleared(CharData chr)
+    public override IEnumerator StatusCleared(CharacterInfo chr)
     {
-        chr.statuses.Remove(statusName);
-        chr.DEFMod = 1.00f;
+        chr.removeStatus(statusName);
+        chr.BuffModDEF = 0;
         system.infoText.SetText("Defense reverted!");
         yield return new WaitForSeconds(0.75f);
     }

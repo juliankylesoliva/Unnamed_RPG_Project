@@ -20,7 +20,7 @@ public class EnemySliderUI : MonoBehaviour
         }
     }
 
-    public IEnumerator flashHUD(CharData data)
+    public IEnumerator flashHUD(CharacterInfo data)
     {
         showHealthbar();
         showDamage();
@@ -31,9 +31,9 @@ public class EnemySliderUI : MonoBehaviour
         hideHeader();
     }
 
-    public IEnumerator drainHealthbar(CharData data)
+    public IEnumerator drainHealthbar(CharacterInfo data)
     {
-        int goal = data.currentHP;
+        int goal = data.CurrentHP;
 
         while(healthbar.value > goal)
         {
@@ -49,9 +49,9 @@ public class EnemySliderUI : MonoBehaviour
         yield return new WaitForSeconds(0.65f);
     }
 
-    public IEnumerator fillHealthbar(CharData data)
+    public IEnumerator fillHealthbar(CharacterInfo data)
     {
-        int goal = data.currentHP;
+        int goal = data.CurrentHP;
 
         while (healthbar.value < goal)
         {
@@ -67,15 +67,15 @@ public class EnemySliderUI : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
     }
 
-    public void setHUD(CharData data)
+    public void setHUD(CharacterInfo data)
     {
-        healthbar.maxValue = data.maxHP;
-        healthbar.value = data.currentHP;
+        healthbar.maxValue = data.MaxHP;
+        healthbar.value = data.CurrentHP;
     }
 
-    public void setNametag(CharData data)
+    public void setNametag(CharacterInfo data)
     {
-        nametag.SetText($"{data.charName} (Lv. {data.charLvl})");
+        nametag.SetText($"{data.Name} (Lv. {data.Level})");
     }
 
     public void setDamageNum(int dmg)

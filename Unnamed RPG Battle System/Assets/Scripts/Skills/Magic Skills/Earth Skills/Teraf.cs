@@ -11,11 +11,11 @@ public class Teraf : SkillScript
         system.targetMode = TargetMode.AnyEnemy;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} casted Teraf!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} casted Teraf!"));
 
         yield return StartCoroutine(DoChangeCamToPlayerTargets(dst));
 
@@ -33,7 +33,7 @@ public class Teraf : SkillScript
         }
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

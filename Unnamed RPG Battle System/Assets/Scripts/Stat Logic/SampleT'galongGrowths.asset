@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39eb121f4f24f84489629997064940c0, type: 3}
+  m_Name: SampleT'galongGrowths
+  m_EditorClassIdentifier: 
+  baseExpGoal: 100
+  baseExpGoalGrowth: 1.2
+  maxExpGoal: 55000
+  baseHP: 180
+  growthHP: 6.15
+  baseATK: 3
+  growthATK: 1.1
+  baseDEF: 3
+  growthDEF: 1.2
+  baseSPD: 10
+  growthSPD: 3.8
+  baseMP: 80
+  growthMP: 4.85
+  baseMAG: 8
+  growthMAG: 3.3
+  baseRES: 1
+  growthRES: 1.25
+  basePRC: 10
+  growthPRC: 3.15
+  baseBRV: 3
+  growthBRV: 1.9
+  baseCHA: 6
+  growthCHA: 2.1
+  baseCOM: 14
+  growthCOM: 3.2
+  baseSKL: 12
+  growthSKL: 3.8

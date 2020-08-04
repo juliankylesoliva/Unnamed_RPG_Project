@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4940653075906785540}
-  - component: {fileID: 4940653075906785541}
+  - component: {fileID: 8415430884699304785}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4940653075906785541
+--- !u!114 &8415430884699304785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,38 +41,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 4940653075906785539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21039fd1b7a62ea42a7699484c25d242, type: 3}
+  m_Script: {fileID: 11500000, guid: 19b8cd2ceb05538469437224b472ddc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentBattlePosition: -1
-  isStandby: 0
-  isGuarding: 0
-  charName: Baddie
-  charLvl: 1
-  maxHP: 540
-  currentHP: 540
-  ATK: 3
-  DEF: 4
-  SPD: 5
-  maxMP: 5
-  currentMP: 5
-  MAG: 4
-  RES: 3
-  PRC: 8
-  BRV: 1
-  CHA: 1
-  COM: 1
-  SKL: 1
-  ATKMod: 1
-  MAGMod: 1
-  DEFMod: 1
-  RESMod: 1
-  SPDMod: 1
-  PRCMod: 1
-  skillNames: []
-  skillSet: []
-  weaknesses: 05000000
-  resistances: 06000000
+  baseGrowths: {fileID: 11400000, guid: 7398ecae962c59d419f8fd25323d2e86, type: 2}
+  _name: Baddie
+  _level: 1
+  _expPts: 0
+  _maxHP: 0
+  _currentHP: 0
+  _attack: 0
+  _defense: 0
+  _speed: 0
+  _maxMP: 0
+  _currentMP: 0
+  _magic: 0
+  _resistance: 0
+  _precision: 0
+  _bravery: 0
+  _charisma: 0
+  _compassion: 0
+  _skill: 0
+  _bonusHP: 0
+  _bonusATK: 0
+  _bonusDEF: 0
+  _bonusSPD: 0
+  _bonusMP: 0
+  _bonusMAG: 0
+  _bonusRES: 0
+  _bonusPRC: 0
+  _bonusBRV: 0
+  _bonusCHA: 0
+  _bonusCOM: 0
+  _bonusSKL: 0
+  _unitPosition: -1
+  _buffModATK: 0
+  _buffModDEF: 0
+  _buffModMAG: 0
+  _buffModRES: 0
+  _buffModSPD: 0
+  _buffModPRC: 0
+  weakness: 05000000
+  resists: 06000000
+  nullifies: 
+  absorbs: 
+  reflects: 
+  skillsLearnedOnLevelUp: []
+  learnedSkills: []
+  equippedSkills: []
+  battleSkills: []
 --- !u!1 &4940653076251462998
 GameObject:
   m_ObjectHideFlags: 0

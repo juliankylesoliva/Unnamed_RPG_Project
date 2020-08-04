@@ -8,7 +8,7 @@ public enum DamageType {Normal, Resist, Weakness, Critical}
 
 public class DamageCalculator : MonoBehaviour
 {
-    public int calcDamage(CharData attacker, CharData target, int power, int deviation, AttackType type, ElementType elem)
+    public int calcDamage(CharacterInfo attacker, CharacterInfo target, int power, int deviation, AttackType type, ElementType elem)
     {
         float totalDamage = 0.0f;
 
@@ -22,10 +22,10 @@ public class DamageCalculator : MonoBehaviour
                 switch(elem)
                 {
                     case ElementType.Slice:
-                        ratio = (attacker.ATK * attacker.ATKMod) / (target.DEF * target.DEFMod * 0.9f);
+                        ratio = (attacker.Attack * getBuffModMultiplier(attacker.BuffModATK)) / (target.Defense * getBuffModMultiplier(target.BuffModDEF) * 0.9f);
                         break;
                     default:
-                        ratio = (attacker.ATK * attacker.ATKMod) / (target.DEF * target.DEFMod);
+                        ratio = (attacker.Attack * getBuffModMultiplier(attacker.BuffModATK)) / (target.Defense * getBuffModMultiplier(target.BuffModDEF));
                         break;
                 }
                 break;
@@ -33,10 +33,10 @@ public class DamageCalculator : MonoBehaviour
                 switch(elem)
                 {
                     case ElementType.Earth:
-                        ratio = (attacker.MAG * attacker.MAGMod) / (target.DEF * target.DEFMod);
+                        ratio = (attacker.Magic * getBuffModMultiplier(attacker.BuffModMAG)) / (target.Defense * getBuffModMultiplier(target.BuffModDEF));
                         break;
                     default:
-                        ratio = (attacker.MAG * attacker.MAGMod) / (target.RES * target.RESMod);
+                        ratio = (attacker.Magic * getBuffModMultiplier(attacker.BuffModMAG)) / (target.Resistance * getBuffModMultiplier(target.BuffModRES));
                         break;
                 }
                 break;
@@ -53,9 +53,9 @@ public class DamageCalculator : MonoBehaviour
         return (int)totalDamage;
     }
 
-    void conditionalDmgMods(CharData target, ElementType elem, ref float dmg)
+    void conditionalDmgMods(CharacterInfo target, ElementType elem, ref float dmg)
     {
-        if (target.statuses.ContainsKey(StatusCondition.Soak))
+        if (target.containsStatus(StatusCondition.Soak))
         {
             switch (elem)
             {
@@ -71,7 +71,7 @@ public class DamageCalculator : MonoBehaviour
             }
         }
 
-        if (target.statuses.ContainsKey(StatusCondition.Burn))
+        if (target.containsStatus(StatusCondition.Burn))
         {
             if (elem == ElementType.Explosion)
             {
@@ -79,42 +79,42 @@ public class DamageCalculator : MonoBehaviour
             }
         }
 
-        if (target.isGuarding)
+        if (target.IsGuarding)
         {
             dmg *= 0.5f;
         }
     }
 
-    public int calcHealing(CharData healer, int power)
+    public int calcHealing(CharacterInfo healer, int power)
     {
         float ratio = (power / 25.0f) + 2.0f;
 
-        float totalHealing = healer.COM * ratio;
+        float totalHealing = healer.Compassion * ratio;
 
         return (int)totalHealing;
     }
 
-    public bool calcHit(CharData attacker, CharData target, int accuracy)
+    public bool calcHit(CharacterInfo attacker, CharacterInfo target, int accuracy)
     {
-        float ratio = (attacker.PRC * attacker.PRCMod) / (target.SPD * target.SPDMod);
+        float ratio = (attacker.Precision * getBuffModMultiplier(attacker.BuffModPRC)) / (target.Speed * getBuffModMultiplier(target.BuffModSPD));
         int percentage = (int)(ratio * accuracy);
         int rng = Random.Range(1, 101);
         return rng <= percentage;
     }
 
-    public bool calcCrit(CharData attacker, int crit)
+    public bool calcCrit(CharacterInfo attacker, int crit)
     {
-        int percentage = (attacker.SKL + crit) / 10;
+        int percentage = (attacker.Skill + crit) / 10;
         int rng = Random.Range(1, 101);
         return rng <= percentage;
     }
 
-    public bool calcEndure(CharData playerData)
+    public bool calcEndure(CharacterInfo playerData)
     {
-        float ratio = playerData.BRV / 10.0f;
+        float ratio = playerData.Bravery / 10.0f;
         int percentage;
 
-        if(playerData.isGuarding)
+        if(playerData.IsGuarding)
         {
             percentage = (int)(ratio * 2);
         }
@@ -125,5 +125,18 @@ public class DamageCalculator : MonoBehaviour
 
         int rng = Random.Range(1, 101);
         return rng <= percentage;
+    }
+
+    public float getBuffModMultiplier(int stage)
+    {
+        switch (stage)
+        {
+            case 1:
+                return 1.20f;
+            case -1:
+                return 0.80f;
+            default:
+                return 1.00f;
+        }
     }
 }

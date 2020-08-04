@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39eb121f4f24f84489629997064940c0, type: 3}
+  m_Name: SampleBaddieGrowths
+  m_EditorClassIdentifier: 
+  baseExpGoal: 0
+  baseExpGoalGrowth: 0
+  maxExpGoal: 0
+  baseHP: 540
+  growthHP: 9.25
+  baseATK: 3
+  growthATK: 1.35
+  baseDEF: 4
+  growthDEF: 1.25
+  baseSPD: 5
+  growthSPD: 1.6
+  baseMP: 5
+  growthMP: 5.6
+  baseMAG: 4
+  growthMAG: 1.2
+  baseRES: 3
+  growthRES: 0.8
+  basePRC: 8
+  growthPRC: 2.5
+  baseBRV: 1
+  growthBRV: 1
+  baseCHA: 1
+  growthCHA: 1
+  baseCOM: 1
+  growthCOM: 1
+  baseSKL: 1
+  growthSKL: 1

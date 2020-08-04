@@ -7,13 +7,13 @@ public abstract class SkillScript : MonoBehaviour
     public SkillInfo info;
     public BattleSystem system;
     public DamageCalculator calc;
-    public StatusContainer statuses;
+    public StatusContainer currentStatuses;
 
     public abstract void PrepareSkill(); // Set an info message, change the camera, and change the targeting mode.
 
-    public abstract IEnumerator DoSkill(CharData src, CharData dst); // Add custom behavior to this skill while using the below functions.
+    public abstract IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst); // Add custom behavior to this skill while using the below functions.
 
-    public abstract IEnumerator DoMainActionUnit(CharData src, CharData dst); // Use this in case you want (i.e.) to loop the main body of a multi-target skill.
+    public abstract IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst); // Use this in case you want (i.e.) to loop the main body of a multi-target skill.
 
     /* COMMON FUNCTIONS */
 
@@ -22,40 +22,40 @@ public abstract class SkillScript : MonoBehaviour
         system.meter.SubFromTimer(info.timeCost);
     }
 
-    public void DoMPCost(CharData src)
+    public void DoMPCost(CharacterInfo src)
     {
-        src.SpendMP(info.mpCost);
-        if (src.currentBattlePosition < 4)
+        src.spendMP(info.mpCost);
+        if (src.UnitPosition < 4)
         {
-            StartCoroutine(system.statusPanelRefs[src.currentBattlePosition].drainMPBar(src));
+            StartCoroutine(system.statusPanelRefs[src.UnitPosition].drainMPBar(src));
         }
     }
 
-    public void DoHPCost(CharData src)
+    public void DoHPCost(CharacterInfo src)
     {
-        src.SpendHP(info.hpCostPercent);
-        if(src.currentBattlePosition < 4)
+        src.spendHP(info.hpCostPercent);
+        if(src.UnitPosition < 4)
         {
-            StartCoroutine(system.statusPanelRefs[src.currentBattlePosition].drainHPBar(src));
+            StartCoroutine(system.statusPanelRefs[src.UnitPosition].drainHPBar(src));
         }
         else
         {
-            StartCoroutine(system.healthbarRefs[src.currentBattlePosition - 4].flashHUD(src));
+            StartCoroutine(system.healthbarRefs[src.UnitPosition - 4].flashHUD(src));
         }
     }
 
-    public IEnumerator DoChangeCamToPlayerTargets(CharData dst)
+    public IEnumerator DoChangeCamToPlayerTargets(CharacterInfo dst)
     {
-        if (dst.currentBattlePosition <= 3)
+        if (dst.UnitPosition <= 3)
         {
-            system.ChangeToCamPosition(dst.currentBattlePosition);
+            system.ChangeToCamPosition(dst.UnitPosition);
         }
         yield return new WaitForSeconds(0.8f);
     }
 
-    public IEnumerator DoChangeCamToAllPlayerTargets(CharData dst)
+    public IEnumerator DoChangeCamToAllPlayerTargets(CharacterInfo dst)
     {
-        if (dst.currentBattlePosition <= 3)
+        if (dst.UnitPosition <= 3)
         {
             system.ChangeToCamPosition(9);
         }
@@ -68,9 +68,9 @@ public abstract class SkillScript : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
     }
 
-    public bool DoHitCheck(CharData src, CharData dst)
+    public bool DoHitCheck(CharacterInfo src, CharacterInfo dst)
     {
-        if (dst.isGuarding || calc.calcHit(src, dst, info.hitRate))
+        if (dst.IsGuarding || calc.calcHit(src, dst, info.hitRate))
         {
             return true;
         }
@@ -83,17 +83,17 @@ public abstract class SkillScript : MonoBehaviour
         return false;
     }
 
-    public int DoDamageCalculation(CharData src, CharData dst)
+    public int DoDamageCalculation(CharacterInfo src, CharacterInfo dst)
     {
         return calc.calcDamage(src, dst, info.skillPower, info.deviationPercent, info.skillType, info.element);
     }
 
-    public int DoHealingCalculation(CharData src)
+    public int DoHealingCalculation(CharacterInfo src)
     {
         return calc.calcHealing(src, info.skillPower);
     }
 
-    public bool DoDamageMultiplication(CharData src, CharData dst, ref int dmg)
+    public bool DoDamageMultiplication(CharacterInfo src, CharacterInfo dst, ref int dmg)
     {
         if (calc.calcCrit(src, info.critRate))
         {
@@ -106,7 +106,7 @@ public abstract class SkillScript : MonoBehaviour
             DoHealthBarText(dst, "CRITICAL!!!", dmg);
             return true;
         }
-        else if (dst.weaknesses.IndexOf(info.element) != -1)
+        else if (dst.weakness.IndexOf(info.element) != -1)
         {
             dmg *= 2;
             system.infoText.SetText("Weakness!");
@@ -117,7 +117,7 @@ public abstract class SkillScript : MonoBehaviour
             DoHealthBarText(dst, "WEAK!", dmg);
             return true;
         }
-        else if (dst.resistances.IndexOf(info.element) != -1)
+        else if (dst.resists.IndexOf(info.element) != -1)
         {
             dmg = (int)(dmg * 0.5f);
             system.infoText.SetText("Resisted...");
@@ -134,43 +134,43 @@ public abstract class SkillScript : MonoBehaviour
         return false;
     }
 
-    public void DoHealthBarText(CharData dst, string header, int num)
+    public void DoHealthBarText(CharacterInfo dst, string header, int num)
     {
-        if(dst.currentBattlePosition > 3)
+        if(dst.UnitPosition > 3)
         {
-            system.healthbarRefs[dst.currentBattlePosition - 4].setHeader(header);
-            system.healthbarRefs[dst.currentBattlePosition - 4].setDamageNum(num);
+            system.healthbarRefs[dst.UnitPosition - 4].setHeader(header);
+            system.healthbarRefs[dst.UnitPosition - 4].setDamageNum(num);
         }
         else
         {
-            system.playerHealthbarRefs[dst.currentBattlePosition].setHeader(header);
-            system.playerHealthbarRefs[dst.currentBattlePosition].setDamageNum(num);
+            system.playerHealthbarRefs[dst.UnitPosition].setHeader(header);
+            system.playerHealthbarRefs[dst.UnitPosition].setDamageNum(num);
         }
     }
 
-    public IEnumerator DoDealDamage(CharData dst, int dmg)
+    public IEnumerator DoDealDamage(CharacterInfo dst, int dmg)
     {
-        //system.infoText.SetText($"{dst.charName} took {dmg} damage!");
-        bool isKnockedOut = dst.DoDamage(dmg);
-        if (dst.currentBattlePosition < 4)
+        //system.infoText.SetText($"{dst.Name} took {dmg} damage!");
+        bool isKnockedOut = dst.dealDamage(dmg);
+        if (dst.UnitPosition < 4)
         {
-            StartCoroutine(system.statusPanelRefs[dst.currentBattlePosition].drainHPBar(dst));
-            StartCoroutine(system.playerHealthbarRefs[dst.currentBattlePosition].flashHUD(dst));
+            StartCoroutine(system.statusPanelRefs[dst.UnitPosition].drainHPBar(dst));
+            StartCoroutine(system.playerHealthbarRefs[dst.UnitPosition].flashHUD(dst));
         }
         else
         {
-            StartCoroutine(system.healthbarRefs[dst.currentBattlePosition - 4].flashHUD(dst));
+            StartCoroutine(system.healthbarRefs[dst.UnitPosition - 4].flashHUD(dst));
         }
 
         yield return new WaitForSeconds(0.25f);
 
         if (isKnockedOut)
         {
-            system.infoText.SetText($"{dst.charName} got knocked out!");
+            system.infoText.SetText($"{dst.Name} got knocked out!");
 
-            if(dst.currentBattlePosition > 3)
+            if(dst.UnitPosition > 3)
             {
-                GameObject.Destroy(system.enemyStations[dst.currentBattlePosition - 4].transform.GetChild(0).gameObject);
+                GameObject.Destroy(system.enemyStations[dst.UnitPosition - 4].transform.GetChild(0).gameObject);
             }
 
             if(info.element == ElementType.Air && system.meter.timeMeter.value > 0)
@@ -182,10 +182,10 @@ public abstract class SkillScript : MonoBehaviour
         yield return new WaitForSeconds(0.35f);
     }
 
-    public CharData GetAdjacentTarget(CharData dst, int shift)
+    public CharacterInfo GetAdjacentTarget(CharacterInfo dst, int shift)
     {
-        CharData retData = null;
-        int startPos = dst.currentBattlePosition;
+        CharacterInfo retData = null;
+        int startPos = dst.UnitPosition;
 
         switch(shift)
         {
@@ -223,13 +223,13 @@ public abstract class SkillScript : MonoBehaviour
         return null;
     }
 
-    public CharData GetRandomTarget(CharData dst)
+    public CharacterInfo GetRandomTarget(CharacterInfo dst)
     {
-        CharData randomTarget = null;
+        CharacterInfo randomTarget = null;
 
         while (randomTarget == null)
         {
-            if (dst.currentBattlePosition > 3)
+            if (dst.UnitPosition > 3)
             {
                 if(system.areAllEnemiesDefeated())
                 {
@@ -250,42 +250,42 @@ public abstract class SkillScript : MonoBehaviour
         return randomTarget;
     }
 
-    public IEnumerator DoHPHealing(CharData dst, int heal)
+    public IEnumerator DoHPHealing(CharacterInfo dst, int heal)
     {
-        system.infoText.SetText($"{dst.charName} recovered {heal} HP!");
+        system.infoText.SetText($"{dst.Name} recovered {heal} HP!");
 
-        dst.DoHealing(heal);
-        if (dst.currentBattlePosition < 4)
+        dst.healDamage(heal);
+        if (dst.UnitPosition < 4)
         {
-            StartCoroutine(system.statusPanelRefs[dst.currentBattlePosition].fillHPBar(dst));
-            StartCoroutine(system.playerHealthbarRefs[dst.currentBattlePosition].fillHealthbar(dst));
+            StartCoroutine(system.statusPanelRefs[dst.UnitPosition].fillHPBar(dst));
+            StartCoroutine(system.playerHealthbarRefs[dst.UnitPosition].fillHealthbar(dst));
         }
         else
         {
-            StartCoroutine(system.healthbarRefs[dst.currentBattlePosition - 4].fillHealthbar(dst));
+            StartCoroutine(system.healthbarRefs[dst.UnitPosition - 4].fillHealthbar(dst));
         }
 
         yield return new WaitForSeconds(1.5f);
     }
 
-    public IEnumerator DoMPHealing(CharData dst, int heal)
+    public IEnumerator DoMPHealing(CharacterInfo dst, int heal)
     {
-        system.infoText.SetText($"{dst.charName} recovered {heal} MP!");
+        system.infoText.SetText($"{dst.Name} recovered {heal} MP!");
 
-        dst.DoRestoreMP(heal);
-        if (dst.currentBattlePosition < 4)
+        dst.restoreMP(heal);
+        if (dst.UnitPosition < 4)
         {
-            StartCoroutine(system.statusPanelRefs[dst.currentBattlePosition].fillMPBar(dst));
+            StartCoroutine(system.statusPanelRefs[dst.UnitPosition].fillMPBar(dst));
         }
 
         yield return new WaitForSeconds(1.5f);
     }
 
-    public IEnumerator DoLoopMainAction(CharData src, CharData dst)
+    public IEnumerator DoLoopMainAction(CharacterInfo src, CharacterInfo dst)
     {
-        if (dst.currentBattlePosition > 3)
+        if (dst.UnitPosition > 3)
         {
-            foreach (CharData enemy in system.enemyPartyData)
+            foreach (CharacterInfo enemy in system.enemyPartyData)
             {
                 if (enemy != null)
                 {
@@ -295,7 +295,7 @@ public abstract class SkillScript : MonoBehaviour
         }
         else
         {
-            foreach (CharData player in system.playerPartyData)
+            foreach (CharacterInfo player in system.playerPartyData)
             {
                 if (player != null)
                 {
@@ -305,75 +305,75 @@ public abstract class SkillScript : MonoBehaviour
         }
     }
 
-    public IEnumerator DoATKUp(CharData dst, int numTurns)
+    public IEnumerator DoATKUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.ATK_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.ATK_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoATKDown(CharData dst, int numTurns)
+    public IEnumerator DoATKDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.ATK_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.ATK_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoDEFUp(CharData dst, int numTurns)
+    public IEnumerator DoDEFUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.DEF_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.DEF_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoDEFDown(CharData dst, int numTurns)
+    public IEnumerator DoDEFDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.DEF_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.DEF_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoSPDUp(CharData dst, int numTurns)
+    public IEnumerator DoSPDUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.SPD_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.SPD_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoSPDDown(CharData dst, int numTurns)
+    public IEnumerator DoSPDDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.SPD_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.SPD_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoMAGUp(CharData dst, int numTurns)
+    public IEnumerator DoMAGUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.MAG_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.MAG_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoMAGDown(CharData dst, int numTurns)
+    public IEnumerator DoMAGDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.MAG_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.MAG_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoRESUp(CharData dst, int numTurns)
+    public IEnumerator DoRESUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.RES_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.RES_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoRESDown(CharData dst, int numTurns)
+    public IEnumerator DoRESDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.RES_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.RES_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoPRCUp(CharData dst, int numTurns)
+    public IEnumerator DoPRCUp(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.PRC_Up);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.PRC_Up);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
-    public IEnumerator DoPRCDown(CharData dst, int numTurns)
+    public IEnumerator DoPRCDown(CharacterInfo dst, int numTurns)
     {
-        StatusScript statTemp = statuses.LookForStatus(StatusCondition.PRC_Down);
+        StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.PRC_Down);
         yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
     }
 
@@ -382,50 +382,50 @@ public abstract class SkillScript : MonoBehaviour
         return Random.Range(1, 101) <= percent;
     }
 
-    public IEnumerator AddBurn(CharData dst, int numTurns)
+    public IEnumerator AddBurn(CharacterInfo dst, int numTurns)
     {
-        if (!dst.isGuarding && dst.currentHP > 0 && !dst.statuses.ContainsKey(StatusCondition.Soak))
+        if (!dst.IsGuarding && dst.CurrentHP > 0 && !dst.containsStatus(StatusCondition.Soak))
         {
-            StatusScript statTemp = statuses.LookForStatus(StatusCondition.Burn);
+            StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.Burn);
             yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
         }
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator RemoveBurn(CharData dst)
+    public IEnumerator RemoveBurn(CharacterInfo dst)
     {
-        if (dst.statuses.ContainsKey(StatusCondition.Burn) && dst.currentHP > 0)
+        if (dst.containsStatus(StatusCondition.Burn) && dst.CurrentHP > 0)
         {
-            StatusScript statTemp = statuses.LookForStatus(StatusCondition.Burn);
+            StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.Burn);
             yield return StartCoroutine(statTemp.StatusCleared(dst));
         }
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator AddSoak(CharData dst, int numTurns)
+    public IEnumerator AddSoak(CharacterInfo dst, int numTurns)
     {
-        if(!dst.isGuarding && dst.currentHP > 0)
+        if(!dst.IsGuarding && dst.CurrentHP > 0)
         {
-            StatusScript statTemp = statuses.LookForStatus(StatusCondition.Soak);
+            StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.Soak);
             yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
         }
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator RemoveSoak(CharData dst)
+    public IEnumerator RemoveSoak(CharacterInfo dst)
     {
-        if(dst.statuses.ContainsKey(StatusCondition.Soak) && dst.currentHP > 0)
+        if(dst.containsStatus(StatusCondition.Soak) && dst.CurrentHP > 0)
         {
-            StatusScript statTemp = statuses.LookForStatus(StatusCondition.Soak);
+            StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.Soak);
             yield return StartCoroutine(statTemp.StatusCleared(dst));
         }
     }
 
-    public IEnumerator AddPoison(CharData dst, int numTurns)
+    public IEnumerator AddPoison(CharacterInfo dst, int numTurns)
     {
-        if (!dst.isGuarding && dst.currentHP > 0)
+        if (!dst.IsGuarding && dst.CurrentHP > 0)
         {
-            StatusScript statTemp = statuses.LookForStatus(StatusCondition.Poison);
+            StatusScript statTemp = currentStatuses.LookForStatus(StatusCondition.Poison);
             yield return StartCoroutine(statTemp.InitializeStatus(dst, numTurns));
         }
         yield return new WaitForSeconds(0.0f);

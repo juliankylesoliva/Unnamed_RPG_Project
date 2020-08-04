@@ -213,7 +213,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 63dd745a96f29034f9a3b1ea2f8b9bd6, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &17595427
 Transform:
   m_ObjectHideFlags: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: e68613e35857b75499434967e85aaeeb, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &40690991
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,7 +564,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 73135203}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.055244446, y: -12.130496, z: 25.408422}
+  m_LocalPosition: {x: 6.0552444, y: -12.130496, z: 25.408422}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1574221330}
@@ -650,7 +650,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 5da1465b7c6fe914082cd66e05f21c43, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &84183151
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,7 +697,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 09328f8084fb5fb4faacc29f304d64e4, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &97309498
 GameObject:
   m_ObjectHideFlags: 0
@@ -4607,7 +4607,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 7656bd6e540b652498992ff25c60798e, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &203929230
 GameObject:
   m_ObjectHideFlags: 0
@@ -5004,7 +5004,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: ed6e6946795bd8c47a9676f92849b4f4, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
   inventory: {fileID: 772173041}
 --- !u!1 &379763998
 GameObject:
@@ -5320,7 +5320,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 33fafe97369f14a4c97738e83d3eb8c5, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &453064774
 GameObject:
   m_ObjectHideFlags: 0
@@ -5676,7 +5676,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 940127655a9d8ce42b2c4a15a847497e, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &610315578
 GameObject:
   m_ObjectHideFlags: 0
@@ -5709,7 +5709,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 67b388e074d44ee49982f9ad6aada8c3, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &610315580
 Transform:
   m_ObjectHideFlags: 0
@@ -5770,7 +5770,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 77610c94188a36341851e630afe79727, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &631060961
 GameObject:
   m_ObjectHideFlags: 0
@@ -5976,7 +5976,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 04b797678c4e4544ab3a8b01045d7e7e, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
   inventory: {fileID: 772173041}
 --- !u!1 &639970833
 GameObject:
@@ -6719,7 +6719,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: dc44999470dad33438279e9c0028d823, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &790760849
 Transform:
   m_ObjectHideFlags: 0
@@ -7219,7 +7219,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: b3154a03b604c944592e2b45ada8013f, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &894217451
 Transform:
   m_ObjectHideFlags: 0
@@ -7393,7 +7393,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 851d231c20575da45ae18af9cec097dc, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1017872172
 Transform:
   m_ObjectHideFlags: 0
@@ -7548,7 +7548,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 5c550976d4c32ea4691e00ca9fbe83ee, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1047964323
 GameObject:
   m_ObjectHideFlags: 0
@@ -7595,7 +7595,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 286a9810fcc46614ea212a1f432205f3, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1054369173
 GameObject:
   m_ObjectHideFlags: 0
@@ -7628,7 +7628,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 3ae0fef7a52b40c4298e4b770a87fe0f, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1054369175
 Transform:
   m_ObjectHideFlags: 0
@@ -7751,7 +7751,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 2e3d30cf22538c34aa67389698b0d4f3, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1097001048
 Transform:
   m_ObjectHideFlags: 0
@@ -7798,7 +7798,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 3276134d35ada0643a28ebd45a6c674d, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1152565344
 Transform:
   m_ObjectHideFlags: 0
@@ -8078,7 +8078,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: f1b74880337ab8448acc45019f8b5d9d, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1237314318
 GameObject:
   m_ObjectHideFlags: 0
@@ -11953,7 +11953,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: d710fea248122e14d97017785aa60217, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1320289613
 GameObject:
   m_ObjectHideFlags: 3
@@ -12139,7 +12139,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 52005d537c0fa4042b4d65b2bffda8c7, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1390521438
 Transform:
   m_ObjectHideFlags: 0
@@ -15998,7 +15998,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: cb969b1835761944982b4c0020b6d878, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1501350987
 Transform:
   m_ObjectHideFlags: 0
@@ -16754,7 +16754,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 4072dbb8cb6a12946bd9a8603679ddf8, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1797383339
 GameObject:
   m_ObjectHideFlags: 0
@@ -17027,7 +17027,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 025ce10b25d3d294ebf9075302004103, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!1 &1873821507
 GameObject:
   m_ObjectHideFlags: 0
@@ -21023,7 +21023,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 5dd310b9430706e4a92a56a756916b87, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!4 &1917715197
 Transform:
   m_ObjectHideFlags: 0
@@ -21550,7 +21550,7 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: c69ddfd2206eed04c9826d19ac1c0c2f, type: 2}
   system: {fileID: 52279692}
   calc: {fileID: 1797383340}
-  statuses: {fileID: 40690993}
+  currentStatuses: {fileID: 40690993}
 --- !u!43 &2128684866
 Mesh:
   m_ObjectHideFlags: 0

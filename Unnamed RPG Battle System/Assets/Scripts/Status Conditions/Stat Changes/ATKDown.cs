@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class ATKDown : StatusScript
 {
-    public override IEnumerator InitializeStatus(CharData chr, int numTurns)
+    public override IEnumerator InitializeStatus(CharacterInfo chr, int numTurns)
     {
-        if (chr.statuses.ContainsKey(StatusCondition.ATK_Up))
+        if (chr.containsStatus(StatusCondition.ATK_Up))
         {
             StatusScript statTemp = system.statusList.LookForStatus(StatusCondition.ATK_Up);
             yield return StartCoroutine(statTemp.StatusCleared(chr));
         }
-        else if (chr.statuses.ContainsKey(statusName))
+        else if (chr.containsStatus(statusName))
         {
-            chr.statuses[statusName] += numTurns;
+            chr.extendStatus(statusName, numTurns);
             system.infoText.SetText("Attack decrease extended!");
             yield return new WaitForSeconds(0.75f);
         }
         else
         {
-            chr.statuses.Add(statusName, numTurns);
-            chr.ATKMod = 0.75f;
+            chr.giveStatus(statusName, numTurns);
+            chr.BuffModATK = -1;
             system.infoText.SetText("Attack down!");
             yield return new WaitForSeconds(0.75f);
         }
     }
 
-    public override IEnumerator DoStatus(CharData chr)
+    public override IEnumerator DoStatus(CharacterInfo chr)
     {
         yield return new WaitForSeconds(0.0f);
     }
 
-    public override IEnumerator StatusCleared(CharData chr)
+    public override IEnumerator StatusCleared(CharacterInfo chr)
     {
-        chr.statuses.Remove(statusName);
-        chr.ATKMod = 1.00f;
+        chr.removeStatus(statusName);
+        chr.BuffModATK = 0;
         system.infoText.SetText("Attack reverted!");
         yield return new WaitForSeconds(0.75f);
     }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6924930846667526249}
-  - component: {fileID: 8552471627188367465}
+  - component: {fileID: 7147902382145220251}
   m_Layer: 0
   m_Name: Side
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8552471627188367465
+--- !u!114 &7147902382145220251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,42 +41,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 6862393049259102892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21039fd1b7a62ea42a7699484c25d242, type: 3}
+  m_Script: {fileID: 11500000, guid: 19b8cd2ceb05538469437224b472ddc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentBattlePosition: -1
-  isStandby: 0
-  isGuarding: 0
-  charName: Side
-  charLvl: 1
-  maxHP: 125
-  currentHP: 125
-  ATK: 8
-  DEF: 6
-  SPD: 8
-  maxMP: 35
-  currentMP: 35
-  MAG: 2
-  RES: 2
-  PRC: 6
-  BRV: 8
-  CHA: 7
-  COM: 6
-  SKL: 9
-  ATKMod: 1
-  MAGMod: 1
-  DEFMod: 1
-  RESMod: 1
-  SPDMod: 1
-  PRCMod: 1
-  skillNames:
+  baseGrowths: {fileID: 11400000, guid: f794cdf2be3b66440a469de282ea4934, type: 2}
+  _name: Side
+  _level: 1
+  _expPts: 0
+  _maxHP: 0
+  _currentHP: 0
+  _attack: 0
+  _defense: 0
+  _speed: 0
+  _maxMP: 0
+  _currentMP: 0
+  _magic: 0
+  _resistance: 0
+  _precision: 0
+  _bravery: 0
+  _charisma: 0
+  _compassion: 0
+  _skill: 0
+  _bonusHP: 0
+  _bonusATK: 0
+  _bonusDEF: 0
+  _bonusSPD: 0
+  _bonusMP: 0
+  _bonusMAG: 0
+  _bonusRES: 0
+  _bonusPRC: 0
+  _bonusBRV: 0
+  _bonusCHA: 0
+  _bonusCOM: 0
+  _bonusSKL: 0
+  _unitPosition: -1
+  _buffModATK: 0
+  _buffModDEF: 0
+  _buffModMAG: 0
+  _buffModRES: 0
+  _buffModSPD: 0
+  _buffModPRC: 0
+  weakness: 
+  resists: 
+  nullifies: 
+  absorbs: 
+  reflects: 
+  skillsLearnedOnLevelUp: []
+  learnedSkills: []
+  equippedSkills:
   - Attahi
   - Wild Aim
-  - Swift Slice
   - Full Tackle
-  skillSet: []
-  weaknesses: 
-  resistances: 
+  - Swift Strike
+  battleSkills: []
 --- !u!1 &7778650641192557023
 GameObject:
   m_ObjectHideFlags: 0
