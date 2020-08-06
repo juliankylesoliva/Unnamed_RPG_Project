@@ -11,20 +11,20 @@ public class Aid : SkillScript
         system.targetMode = TargetMode.AnyAlly;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} casted Aid!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} casted Aid!"));
 
         int heal = DoHealingCalculation(src);
 
-        system.ChangeToCamPosition(dst.currentBattlePosition);
+        system.ChangeToCamPosition(dst.UnitPosition);
 
         yield return StartCoroutine(DoHPHealing(dst, heal));
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

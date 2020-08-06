@@ -22,8 +22,8 @@ public class BattleSystem : MonoBehaviour
     public Transform[] enemyStations;
 
     // References to each units' data
-    public CharData[] playerPartyData = new CharData[4];
-    public CharData[] enemyPartyData = new CharData[5];
+    public CharacterInfo[] playerPartyData = new CharacterInfo[4];
+    public CharacterInfo[] enemyPartyData = new CharacterInfo[5];
 
     // Maximum amount of time per phase.
     int playerTime = 0;
@@ -115,7 +115,7 @@ public class BattleSystem : MonoBehaviour
         SetupPlayerHealthbars();
 
         // Announce the enemies and determine starting phase.
-        infoText.SetText($"{enemyPartyData[0].charName} draws near!");
+        infoText.SetText($"{enemyPartyData[0].Name} draws near!");
         yield return new WaitForSeconds(2.0f);
         StartCoroutine(SetStartingPhase());
     }
@@ -129,17 +129,19 @@ public class BattleSystem : MonoBehaviour
             if((lineupIndex >= 0 && lineupIndex <= playerList.Length) && playerList[lineupIndex] != null)
             {
                 GameObject playerDataTemp = Instantiate(playerList[lineupIndex], playerStations[i]);
-                playerPartyData[i] = playerDataTemp.GetComponent<CharData>();
-                playerPartyData[i].currentBattlePosition = i;
+                playerPartyData[i] = playerDataTemp.GetComponent<CharacterInfo>();
+                playerPartyData[i].UnitPosition = i;
 
-                foreach (string skl in playerPartyData[i].skillNames)
+                foreach (string skl in playerPartyData[i].equippedSkills)
                 {
                     SkillScript skillTemp = masterSkillList.LookForSkill(skl);
                     if (skillTemp != null)
                     {
-                        playerPartyData[i].skillSet.Add(skillTemp);
+                        playerPartyData[i].battleSkills.Add(skillTemp);
                     }
                 }
+
+                playerPartyData[i].initCharacter();
             }
         }
     }
@@ -152,8 +154,9 @@ public class BattleSystem : MonoBehaviour
         for(int i = 0; i < numSpawns; ++i)
         {
             GameObject enemyDataTemp = Instantiate(enemyList[0], enemyStations[i]);
-            enemyPartyData[i] = enemyDataTemp.GetComponent<CharData>();
-            enemyPartyData[i].currentBattlePosition = i + 4;
+            enemyPartyData[i] = enemyDataTemp.GetComponent<CharacterInfo>();
+            enemyPartyData[i].UnitPosition = i + 4;
+            enemyPartyData[i].initCharacter();
         }
         
     }
@@ -269,11 +272,11 @@ public class BattleSystem : MonoBehaviour
     // Sets all players' guards down when going from Enemy Phase to Player Phase
     void ResetPlayerGuards()
     {
-        foreach(CharData dataTemp in playerPartyData)
+        foreach(CharacterInfo dataTemp in playerPartyData)
         {
-            if(dataTemp != null && dataTemp.isGuarding)
+            if(dataTemp != null && dataTemp.IsGuarding)
             {
-                dataTemp.isGuarding = false;
+                dataTemp.IsGuarding = false;
             }
         }
     }
@@ -281,15 +284,15 @@ public class BattleSystem : MonoBehaviour
     // Announces Player Phase
     void PlayerPhase()
     {
-        infoText.SetText($"It's {playerPartyData[currentTurn].charName}'s turn...");
+        infoText.SetText($"It's {playerPartyData[currentTurn].Name}'s turn...");
         menuState = MenuState.TopMenu;
     }
 
     // Activate the currently selected skill
     public IEnumerator DoSkillCR(int targetPos, TargetGroup group)
     {
-        CharData source;
-        CharData destination;
+        CharacterInfo source;
+        CharacterInfo destination;
 
         meter.SetMeterState(MeterStates.Stopped);
         menuState = MenuState.Inactive;
@@ -337,21 +340,21 @@ public class BattleSystem : MonoBehaviour
     void SkillButtonClicked(int menuPos)
     {
         // menuPos corresponds to the index of the unit's skill array
-        selectedSkill = playerPartyData[currentTurn].skillSet[menuPos];
+        selectedSkill = playerPartyData[currentTurn].battleSkills[menuPos];
 
         if(selectedSkill != null) {
             int mpC = selectedSkill.info.mpCost;
             int hpCP = selectedSkill.info.hpCostPercent;
-            CharData dataTemp = playerPartyData[currentTurn];
+            CharacterInfo dataTemp = playerPartyData[currentTurn];
 
             // Verify HP Costs and MP Costs
             // Cannot have both costs at once
-            if (mpC > 0 && hpCP == 0 && dataTemp.CheckMP(mpC))
+            if (mpC > 0 && hpCP == 0 && dataTemp.checkMPCost(mpC))
             {
                 CloseSkillMenu();
                 selectedSkill.PrepareSkill();
             }
-            else if(hpCP > 0 && mpC == 0 && dataTemp.CheckHP(hpCP))
+            else if(hpCP > 0 && mpC == 0 && dataTemp.checkHPCost(hpCP))
             {
                 CloseSkillMenu();
                 selectedSkill.PrepareSkill();
@@ -365,12 +368,12 @@ public class BattleSystem : MonoBehaviour
             {
                 selectedSkill = null;
 
-                if (!dataTemp.CheckMP(mpC))
+                if (!dataTemp.checkMPCost(mpC))
                 {
                     infoText.SetText("Not enough MP!");
                 }
 
-                if(!dataTemp.CheckHP(hpCP))
+                if(!dataTemp.checkHPCost(hpCP))
                 {
                     infoText.SetText("Not enough HP!");
                 }
@@ -387,14 +390,14 @@ public class BattleSystem : MonoBehaviour
         {
             int mpC = selectedSkill.info.mpCost;
             int hpCP = selectedSkill.info.hpCostPercent;
-            CharData dataTemp = playerPartyData[currentTurn];
+            CharacterInfo dataTemp = playerPartyData[currentTurn];
 
-            if (mpC > 0 && hpCP == 0 && dataTemp.CheckMP(mpC))
+            if (mpC > 0 && hpCP == 0 && dataTemp.checkMPCost(mpC))
             {
                 CloseSkillMenu();
                 selectedSkill.PrepareSkill();
             }
-            else if (hpCP > 0 && mpC == 0 && dataTemp.CheckHP(hpCP))
+            else if (hpCP > 0 && mpC == 0 && dataTemp.checkHPCost(hpCP))
             {
                 CloseSkillMenu();
                 selectedSkill.PrepareSkill();
@@ -406,13 +409,13 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
-                if (!dataTemp.CheckMP(mpC))
+                if (!dataTemp.checkMPCost(mpC))
                 {
                     selectedSkill = null;
                     infoText.SetText("Not enough MP!");
                 }
 
-                if (!dataTemp.CheckHP(hpCP))
+                if (!dataTemp.checkHPCost(hpCP))
                 {
                     selectedSkill = null;
                     infoText.SetText("Not enough HP!");
@@ -427,11 +430,11 @@ public class BattleSystem : MonoBehaviour
         infoText.SetText("Select a skill!");
         menuState = MenuState.Skill;
 
-        CharData dataTemp = playerPartyData[currentTurn];
+        CharacterInfo dataTemp = playerPartyData[currentTurn];
 
-        for(int i = 0; i < dataTemp.skillSet.Count; ++i)
+        for(int i = 0; i < dataTemp.battleSkills.Count; ++i)
         {
-            SkillScript skl = dataTemp.skillSet[i];
+            SkillScript skl = dataTemp.battleSkills[i];
 
             GameObject goTemp = Instantiate(skillButtonPrefab, skillMenu.transform);
 
@@ -459,8 +462,8 @@ public class BattleSystem : MonoBehaviour
     // Similar to DoSkillCR as ItemScripts inherit the same base SkillScript class
     public IEnumerator DoItemCR(int targetPos, TargetGroup group)
     {
-        CharData source;
-        CharData destination;
+        CharacterInfo source;
+        CharacterInfo destination;
 
         meter.SetMeterState(MeterStates.Stopped);
         menuState = MenuState.Inactive;
@@ -545,10 +548,10 @@ public class BattleSystem : MonoBehaviour
     /* TODO: Add better enemy AI */
     IEnumerator EnemyPhase()
     {
-        CharData attackerTemp = enemyPartyData[currentTurn - 4];
-        CharData targetTemp = playerPartyData[Random.Range(0, playerList.Length)];
+        CharacterInfo attackerTemp = enemyPartyData[currentTurn - 4];
+        CharacterInfo targetTemp = playerPartyData[Random.Range(0, playerList.Length)];
 
-        infoText.SetText($"It's {enemyPartyData[currentTurn - 4].charName}'s turn...");
+        infoText.SetText($"It's {enemyPartyData[currentTurn - 4].Name}'s turn...");
         yield return new WaitForSeconds(Random.Range(1.0f, 1.5f));
         if(currentState == BattleState.PlayerPhase || meter.timeMeter.value <= 0)
         {
@@ -637,14 +640,14 @@ public class BattleSystem : MonoBehaviour
                     currentTurn = 0;
                 }
             }
-            while (playerPartyData[currentTurn] == null || playerPartyData[currentTurn].currentHP <= 0); // Continue looping until a valid and live unit is found.
+            while (playerPartyData[currentTurn] == null || playerPartyData[currentTurn].CurrentHP <= 0); // Continue looping until a valid and live unit is found.
 
             ChangeToCamPosition(currentTurn);
             yield return StartCoroutine(CheckStatusTimers()); // Passive status timers tick down every time it gets to a unit's turn
 
             if (currentTurn >= 0 && currentTurn <= 3)
             {
-                playerPartyData[currentTurn].isGuarding = false;
+                playerPartyData[currentTurn].IsGuarding = false;
                 meter.SetMeterState(MeterStates.Draining);
                 currentState = BattleState.PlayerPhase;
                 PlayerPhase();
@@ -665,7 +668,7 @@ public class BattleSystem : MonoBehaviour
                     currentTurn = 4;
                 }
             }
-            while (enemyPartyData[currentTurn - 4] == null || enemyPartyData[currentTurn - 4].currentHP <= 0); // Continue looping until a valid and live unit is found.
+            while (enemyPartyData[currentTurn - 4] == null || enemyPartyData[currentTurn - 4].CurrentHP <= 0); // Continue looping until a valid and live unit is found.
 
             ChangeToCamPosition(currentTurn);
             yield return StartCoroutine(CheckStatusTimers()); // Passive status timers tick down every time it gets to a unit's turn
@@ -684,7 +687,7 @@ public class BattleSystem : MonoBehaviour
     // Used for status conditions such as Burn, Poison, etc.
     IEnumerator CheckDamageStatuses()
     {
-        CharData charTemp;
+        CharacterInfo charTemp;
 
         if (currentTurn < 4)
         {
@@ -703,12 +706,12 @@ public class BattleSystem : MonoBehaviour
             charTemp = enemyPartyData[currentTurn - 4];
         }
 
-        if (charTemp.statuses.ContainsKey(StatusCondition.Burn))
+        if (charTemp.containsStatus(StatusCondition.Burn))
         {
             StatusScript statTemp = statusList.LookForStatus(StatusCondition.Burn);
             yield return StartCoroutine(statTemp.DoStatus(charTemp));
         }
-        else if(charTemp.statuses.ContainsKey(StatusCondition.Poison))
+        else if(charTemp.containsStatus(StatusCondition.Poison))
         {
             StatusScript statTemp = statusList.LookForStatus(StatusCondition.Poison);
             yield return StartCoroutine(statTemp.DoStatus(charTemp));
@@ -718,7 +721,7 @@ public class BattleSystem : MonoBehaviour
     // Tick down and remove status conditions when a unit's turn starts
     IEnumerator CheckStatusTimers()
     {
-        CharData charTemp;
+        CharacterInfo charTemp;
 
         if(currentTurn < 4)
         {
@@ -739,14 +742,10 @@ public class BattleSystem : MonoBehaviour
 
         foreach (StatusScript st in statusList.listOfStatuses)
         {
-            if(charTemp.statuses.ContainsKey(st.statusName))
+            if(charTemp.countdownStatus(st.statusName))
             {
-                charTemp.statuses[st.statusName]--;
-
-                if (charTemp.statuses[st.statusName] == 0)
-                {
-                    yield return StartCoroutine(st.StatusCleared(charTemp));
-                }
+                yield return StartCoroutine(st.StatusCleared(charTemp));
+                charTemp.removeStatus(st.statusName);
             }
         }
     }
@@ -754,11 +753,11 @@ public class BattleSystem : MonoBehaviour
     // Win condition
     public bool areAllEnemiesDefeated()
     {
-        foreach (CharData enemy in enemyPartyData)
+        foreach (CharacterInfo enemy in enemyPartyData)
         {
             if(enemy != null)
             {
-                if(enemy.currentHP > 0)
+                if(enemy.CurrentHP > 0)
                 {
                     return false;
                 }
@@ -770,11 +769,11 @@ public class BattleSystem : MonoBehaviour
     // Lose condition
     public bool areAllPlayersDefeated()
     {
-        foreach (CharData player in playerPartyData)
+        foreach (CharacterInfo player in playerPartyData)
         {
             if(player != null)
             {
-                if(player.currentHP > 0)
+                if(player.CurrentHP > 0)
                 {
                     return false;
                 }
@@ -787,11 +786,11 @@ public class BattleSystem : MonoBehaviour
     void CalculateMaxTimers()
     {
         playerTime = 0;
-        foreach (CharData player in playerPartyData)
+        foreach (CharacterInfo player in playerPartyData)
         {
             if (player != null)
             {
-                if (player.currentHP > 0)
+                if (player.CurrentHP > 0)
                 {
                     playerTime += timePerPartyMember;
                 }
@@ -799,11 +798,11 @@ public class BattleSystem : MonoBehaviour
         }
 
         enemyTime = 0;
-        foreach (CharData enemy in enemyPartyData)
+        foreach (CharacterInfo enemy in enemyPartyData)
         {
             if (enemy != null)
             {
-                if (enemy.currentHP > 0)
+                if (enemy.CurrentHP > 0)
                 {
                     enemyTime += timePerEnemy;
                 }

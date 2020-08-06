@@ -74,7 +74,7 @@ public class CharacterInfo : MonoBehaviour
 
         private set
         {
-            if(value >= 0)
+            if(value > 0)
             {
                 _expPts = value;
 
@@ -1098,19 +1098,6 @@ public class CharacterInfo : MonoBehaviour
         }
     }
 
-    public float getBuffModMultiplier(int stage)
-    {
-        switch(stage)
-        {
-            case 1:
-                return 1.20f;
-            case -1:
-                return 0.80f;
-            default:
-                return 1.00f;
-        }
-    }
-
     private Dictionary<StatusCondition, int> currentStatuses;
     public void initCurrentStatuses()
     {
@@ -1120,6 +1107,12 @@ public class CharacterInfo : MonoBehaviour
         }
 
         currentStatuses = new Dictionary<StatusCondition, int>();
+    }
+
+    public bool containsStatus(StatusCondition stat)
+    {
+        initCurrentStatuses();
+        return currentStatuses.ContainsKey(stat);
     }
 
     public void giveStatus(StatusCondition stat, int turns)

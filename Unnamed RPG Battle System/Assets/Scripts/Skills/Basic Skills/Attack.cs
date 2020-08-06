@@ -11,11 +11,11 @@ public class Attack : SkillScript
         system.menuState = MenuState.Attack;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} attacks!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} attacks!"));
 
         yield return StartCoroutine(DoChangeCamToPlayerTargets(dst));
 
@@ -36,7 +36,7 @@ public class Attack : SkillScript
         }
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

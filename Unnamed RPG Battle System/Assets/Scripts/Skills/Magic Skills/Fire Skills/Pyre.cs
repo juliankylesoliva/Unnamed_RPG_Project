@@ -11,11 +11,11 @@ public class Pyre : SkillScript
         system.targetMode = TargetMode.AnyEnemy;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} casted Pyre!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} casted Pyre!"));
 
         yield return StartCoroutine(DoChangeCamToPlayerTargets(dst));
 
@@ -27,7 +27,7 @@ public class Pyre : SkillScript
 
             yield return StartCoroutine(DoDealDamage(dst, dmg));
 
-            if(dst.statuses.ContainsKey(StatusCondition.Burn) || DoPercentCheck(10))
+            if(dst.containsStatus(StatusCondition.Burn) || DoPercentCheck(10))
             {
                 yield return StartCoroutine(AddBurn(dst, 3));
             }
@@ -40,7 +40,7 @@ public class Pyre : SkillScript
         }
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         yield return new WaitForSeconds(0.0f);
     }

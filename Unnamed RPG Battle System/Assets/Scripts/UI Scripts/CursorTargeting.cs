@@ -81,8 +81,8 @@ public class CursorTargeting : MonoBehaviour
         {
             if (hit.collider.tag == "Enemy")
             {
-                CharData targetTemp = hit.collider.gameObject.GetComponentInParent<CharData>();
-                hoverTarget = targetTemp.currentBattlePosition;
+                CharacterInfo targetTemp = hit.collider.gameObject.GetComponentInParent<CharacterInfo>();
+                hoverTarget = targetTemp.UnitPosition;
 
                 system.healthbarRefs[hoverTarget - 4].showHealthbar();
                 system.healthbarRefs[hoverTarget - 4].showNametag();
@@ -114,8 +114,8 @@ public class CursorTargeting : MonoBehaviour
             {
                 if (hit.collider.tag == "Player" && selectedTarget == -1)
                 {
-                    CharData targetTemp = hit.collider.gameObject.GetComponentInParent<CharData>();
-                    selectedTarget = targetTemp.currentBattlePosition;
+                    CharacterInfo targetTemp = hit.collider.gameObject.GetComponentInParent<CharacterInfo>();
+                    selectedTarget = targetTemp.UnitPosition;
 
                     if (system.menuState == MenuState.Skill)
                     {
@@ -140,8 +140,8 @@ public class CursorTargeting : MonoBehaviour
             {
                 if (hit.collider.tag == "Enemy" && selectedTarget == -1)
                 {
-                    CharData targetTemp = hit.collider.gameObject.GetComponentInParent<CharData>();
-                    selectedTarget = targetTemp.currentBattlePosition;
+                    CharacterInfo targetTemp = hit.collider.gameObject.GetComponentInParent<CharacterInfo>();
+                    selectedTarget = targetTemp.UnitPosition;
 
                     if (system.menuState == MenuState.Skill || system.menuState == MenuState.Attack)
                     {

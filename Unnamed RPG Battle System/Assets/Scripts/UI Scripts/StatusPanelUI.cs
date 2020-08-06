@@ -14,16 +14,16 @@ public class StatusPanelUI : MonoBehaviour
     public TextMeshProUGUI mpText;
     public Slider mpSlider;
 
-    public void setHUD(CharData data)
+    public void setHUD(CharacterInfo data)
     {
-        setName(data.charName);
-        setHP(data.currentHP, data.maxHP);
-        setMP(data.currentMP, data.maxMP);
+        setName(data.Name);
+        setHP(data.CurrentHP, data.MaxHP);
+        setMP(data.CurrentMP, data.MaxMP);
     }
 
-    public IEnumerator drainHPBar(CharData data)
+    public IEnumerator drainHPBar(CharacterInfo data)
     {
-        int goal = data.currentHP;
+        int goal = data.CurrentHP;
 
         while (hpSlider.value > goal)
         {
@@ -41,9 +41,9 @@ public class StatusPanelUI : MonoBehaviour
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator fillHPBar(CharData data)
+    public IEnumerator fillHPBar(CharacterInfo data)
     {
-        int goal = data.currentHP;
+        int goal = data.CurrentHP;
 
         while (hpSlider.value < goal)
         {
@@ -61,9 +61,9 @@ public class StatusPanelUI : MonoBehaviour
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator drainMPBar(CharData data)
+    public IEnumerator drainMPBar(CharacterInfo data)
     {
-        int goal = data.currentMP;
+        int goal = data.CurrentMP;
 
         while (mpSlider.value > goal)
         {
@@ -81,9 +81,9 @@ public class StatusPanelUI : MonoBehaviour
         yield return new WaitForSeconds(0.0f);
     }
 
-    public IEnumerator fillMPBar(CharData data)
+    public IEnumerator fillMPBar(CharacterInfo data)
     {
-        int goal = data.currentMP;
+        int goal = data.CurrentMP;
 
         while (mpSlider.value < goal)
         {

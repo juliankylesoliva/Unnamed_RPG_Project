@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class MAGUp : StatusScript
 {
-    public override IEnumerator InitializeStatus(CharData chr, int numTurns)
+    public override IEnumerator InitializeStatus(CharacterInfo chr, int numTurns)
     {
-        if (chr.statuses.ContainsKey(StatusCondition.MAG_Down))
+        if (chr.containsStatus(StatusCondition.MAG_Down))
         {
             StatusScript statTemp = system.statusList.LookForStatus(StatusCondition.MAG_Down);
             yield return StartCoroutine(statTemp.StatusCleared(chr));
         }
-        else if (chr.statuses.ContainsKey(statusName))
+        else if (chr.containsStatus(statusName))
         {
-            chr.statuses[statusName] += numTurns;
+            chr.extendStatus(statusName, numTurns);
             system.infoText.SetText("Magic increase extended!");
             yield return new WaitForSeconds(0.75f);
         }
         else
         {
-            chr.statuses.Add(statusName, numTurns);
-            chr.MAGMod = 1.25f;
+            chr.giveStatus(statusName, numTurns);
+            chr.BuffModMAG = 1;
             system.infoText.SetText("Magic up!");
             yield return new WaitForSeconds(0.75f);
         }
     }
 
-    public override IEnumerator DoStatus(CharData chr)
+    public override IEnumerator DoStatus(CharacterInfo chr)
     {
         yield return new WaitForSeconds(0.0f);
     }
 
-    public override IEnumerator StatusCleared(CharData chr)
+    public override IEnumerator StatusCleared(CharacterInfo chr)
     {
-        chr.statuses.Remove(statusName);
-        chr.MAGMod = 1.00f;
+        chr.removeStatus(statusName);
+        chr.BuffModMAG = 0;
         system.infoText.SetText("Magic reverted!");
         yield return new WaitForSeconds(0.75f);
     }

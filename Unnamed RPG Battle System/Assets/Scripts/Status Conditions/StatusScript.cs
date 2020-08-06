@@ -9,9 +9,9 @@ public abstract class StatusScript : MonoBehaviour
     public BattleSystem system;
     public DamageCalculator calc;
 
-    public abstract IEnumerator InitializeStatus(CharData chr, int numTurns);
+    public abstract IEnumerator InitializeStatus(CharacterInfo chr, int numTurns);
 
-    public abstract IEnumerator DoStatus(CharData chr);
+    public abstract IEnumerator DoStatus(CharacterInfo chr);
 
-    public abstract IEnumerator StatusCleared(CharData chr);
+    public abstract IEnumerator StatusCleared(CharacterInfo chr);
 }

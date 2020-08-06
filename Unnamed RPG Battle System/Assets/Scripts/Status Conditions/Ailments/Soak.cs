@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class Soak : StatusScript
 {
-    public override IEnumerator InitializeStatus(CharData chr, int numTurns)
+    public override IEnumerator InitializeStatus(CharacterInfo chr, int numTurns)
     {
-        if (chr.statuses.ContainsKey(statusName))
+        if (chr.containsStatus(statusName))
         {
-            chr.statuses[statusName] += numTurns;
+            chr.extendStatus(statusName, numTurns);
             system.infoText.SetText("Soak duration extended!");
         }
         else
         {
-            chr.statuses.Add(statusName, numTurns);
-            system.infoText.SetText($"{chr.charName} got soaked!");
+            chr.giveStatus(statusName, numTurns);
+            system.infoText.SetText($"{chr.Name} got soaked!");
         }
         yield return new WaitForSeconds(0.75f);
     }
 
-    public override IEnumerator DoStatus(CharData chr)
+    public override IEnumerator DoStatus(CharacterInfo chr)
     {
         yield return new WaitForSeconds(0.0f);
     }
 
-    public override IEnumerator StatusCleared(CharData chr)
+    public override IEnumerator StatusCleared(CharacterInfo chr)
     {
-        chr.statuses.Remove(statusName);
-        system.infoText.SetText($"{chr.charName} is all dry!");
+        chr.removeStatus(statusName);
+        system.infoText.SetText($"{chr.Name} is all dry!");
         yield return new WaitForSeconds(0.75f);
     }
 }

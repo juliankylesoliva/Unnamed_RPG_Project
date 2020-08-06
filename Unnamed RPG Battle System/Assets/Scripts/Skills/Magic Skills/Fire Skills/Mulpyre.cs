@@ -11,18 +11,18 @@ public class Mulpyre : SkillScript
         system.targetMode = TargetMode.AllEnemies;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} casted Mulpyre!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} casted Mulpyre!"));
 
         yield return StartCoroutine(DoChangeCamToAllPlayerTargets(dst));
 
         yield return DoLoopMainAction(src, dst);
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         if (DoHitCheck(src, dst))
         {
@@ -32,7 +32,7 @@ public class Mulpyre : SkillScript
 
             yield return StartCoroutine(DoDealDamage(dst, dmg));
 
-            if (dst.statuses.ContainsKey(StatusCondition.Burn) || DoPercentCheck(10))
+            if (dst.containsStatus(StatusCondition.Burn) || DoPercentCheck(10))
             {
                 yield return StartCoroutine(AddBurn(dst, 3));
             }

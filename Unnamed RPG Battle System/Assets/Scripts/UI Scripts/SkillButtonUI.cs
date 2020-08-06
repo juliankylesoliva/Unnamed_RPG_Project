@@ -11,7 +11,7 @@ public class SkillButtonUI : MonoBehaviour
 
     public int skillMenuPosition = -1;
 
-    public void setButtonText(SkillInfo info, CharData chr)
+    public void setButtonText(SkillInfo info, CharacterInfo chr)
     {
         if(info.mpCost > 0)
         {

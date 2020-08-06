@@ -11,11 +11,11 @@ public class Wild_Aim : SkillScript
         system.targetMode = TargetMode.AllEnemies;
     }
 
-    public override IEnumerator DoSkill(CharData src, CharData dst)
+    public override IEnumerator DoSkill(CharacterInfo src, CharacterInfo dst)
     {
-        system.ChangeToCamPosition(src.currentBattlePosition);
+        system.ChangeToCamPosition(src.UnitPosition);
 
-        yield return StartCoroutine(DoSendInfoMessage($"{src.charName} used Wild Aim!"));
+        yield return StartCoroutine(DoSendInfoMessage($"{src.Name} used Wild Aim!"));
 
         yield return StartCoroutine(DoChangeCamToPlayerTargets(dst));
 
@@ -24,7 +24,7 @@ public class Wild_Aim : SkillScript
 
         for(int i = 0; i < numTimes; ++i)
         {
-            CharData randomTarget = GetRandomTarget(dst);
+            CharacterInfo randomTarget = GetRandomTarget(dst);
 
             if(randomTarget != null)
             {
@@ -42,7 +42,7 @@ public class Wild_Aim : SkillScript
         yield return new WaitForSeconds(0.75f);
     }
 
-    public override IEnumerator DoMainActionUnit(CharData src, CharData dst)
+    public override IEnumerator DoMainActionUnit(CharacterInfo src, CharacterInfo dst)
     {
         if (DoHitCheck(src, dst))
         {
