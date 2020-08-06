@@ -19,7 +19,7 @@ public abstract class SkillScript : MonoBehaviour
 
     public void DoTimeCost()
     {
-        system.meter.SubFromTimer(info.timeCost);
+        system.meter.SubFromTimer(info.timeCost + system.getNumActionsTaken());
     }
 
     public void DoMPCost(CharacterInfo src)
@@ -95,7 +95,7 @@ public abstract class SkillScript : MonoBehaviour
 
     public bool DoDamageMultiplication(CharacterInfo src, CharacterInfo dst, ref int dmg)
     {
-        if (calc.calcCrit(src, info.critRate))
+        if (calc.calcCrit(src, info.critRate) && !src.DidHitWeakness)
         {
             dmg *= 3;
             system.infoText.SetText("CRITICAL HIT!!!");
@@ -104,9 +104,10 @@ public abstract class SkillScript : MonoBehaviour
                 system.meter.AddToTimer(info.timeCost * 2);
             }
             DoHealthBarText(dst, "CRITICAL!!!", dmg);
+            src.DidHitWeakness = true;
             return true;
         }
-        else if (dst.weakness.IndexOf(info.element) != -1)
+        else if (dst.weakness.IndexOf(info.element) != -1 && !src.DidHitWeakness)
         {
             dmg *= 2;
             system.infoText.SetText("Weakness!");
@@ -115,6 +116,7 @@ public abstract class SkillScript : MonoBehaviour
                 system.meter.AddToTimer(info.timeCost);
             }
             DoHealthBarText(dst, "WEAK!", dmg);
+            src.DidHitWeakness = true;
             return true;
         }
         else if (dst.resists.IndexOf(info.element) != -1)
