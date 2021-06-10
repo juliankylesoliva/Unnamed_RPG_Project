@@ -18,7 +18,7 @@ MonoBehaviour:
   element: 6
   mpCost: 4
   hpCostPercent: 0
-  timeCost: 18
+  timeCost: 4
   hpRestore: 0
   mpRestore: 0
   skillPower: 45

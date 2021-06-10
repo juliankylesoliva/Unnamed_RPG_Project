@@ -21,7 +21,7 @@ public class TimeMeter : MonoBehaviour
 
     void Update()
     {
-        meterText.SetText($"{(int)timeMeter.value} TP");
+        meterText.SetText($"{(int)(timeMeter.value + 0.5f)} TP");
 
         switch(system.currentState)
         {

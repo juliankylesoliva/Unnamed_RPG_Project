@@ -11,7 +11,7 @@ public class SkillButtonUI : MonoBehaviour
 
     public int skillMenuPosition = -1;
 
-    public void setButtonText(SkillInfo info, CharacterInfo chr)
+    public void setButtonText(SkillInfo info, CharacterInfo chr, int numActions)
     {
         if(info.mpCost > 0)
         {
@@ -19,7 +19,7 @@ public class SkillButtonUI : MonoBehaviour
         }
         else if(info.hpCostPercent > 0)
         {
-            headerText.SetText($"{info.skillName} ({chr.getHPPercent(info.hpCostPercent)} HP, {info.timeCost} TP)");
+            headerText.SetText($"{info.skillName} ({chr.getHPPercent(info.hpCostPercent)} HP, {info.timeCost + numActions} TP)");
         }
         else
         {
